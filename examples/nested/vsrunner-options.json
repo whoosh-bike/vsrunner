@@ -1,0 +1,151 @@
+[
+    {
+        "name": "Opt1_Select",
+        "default": "All",
+        "type": "nested",
+        "items": [
+            {
+                "label": "Odd",
+                "value": "Odd"
+            },
+            {
+                "label": "Even",
+                "value": "Even"
+            },
+            {
+                "label": "All",
+                "value": "All"
+            }
+        ]
+    },
+    {
+        "name": "Opt1",
+        "default": "SomeVal1",
+        "type": "node",
+        "dependsOn": "Opt1_Select",
+        "items": [
+            {
+                "label": "SomeVal1",
+                "value": "SomeVal1",
+                "dependsArray": [
+                    "Odd",
+                    "All"
+                ]
+            },
+            {
+                "label": "SomeVal2",
+                "value": "SomeVal2",
+                "dependsArray": [
+                    "Even",
+                    "All"
+                ]
+            },
+            {
+                "label": "SomeVal3",
+                "value": "SomeVal3",
+                "dependsArray": [
+                    "Odd",
+                    "All"
+                ]
+            },
+            {
+                "label": "SomeVal4",
+                "value": "SomeVal4",
+                "dependsArray": [
+                    "Even",
+                    "All"
+                ]
+            },
+            {
+                "label": "SomeVal5",
+                "value": "SomeVal5",
+                "dependsArray": [
+                    "Odd",
+                    "All"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Opt2",
+        "default": "Val1",
+        "type": "simple",
+        "items": [
+            {
+                "label": "Val1",
+                "value": "Val1"
+            },
+            {
+                "label": "Val2",
+                "value": "Val2"
+            }
+        ]
+    },
+    {
+        "name": "Opt3_Select",
+        "default": "All",
+        "type": "nested",
+        "items": [
+            {
+                "label": "Odd",
+                "value": "Odd"
+            },
+            {
+                "label": "Even",
+                "value": "Even"
+            },
+            {
+                "label": "All",
+                "value": "All"
+            }
+        ]
+    },
+    {
+        "name": "Opt3",
+        "default": "OtherVal1",
+        "type": "node",
+        "dependsOn": "Opt3_Select",
+        "items": [
+            {
+                "label": "OtherVal1",
+                "value": "OtherVal1",
+                "dependsArray": [
+                    "Odd",
+                    "All"
+                ]
+            },
+            {
+                "label": "OtherVal2",
+                "value": "OtherVal2",
+                "dependsArray": [
+                    "Even",
+                    "All"
+                ]
+            },
+            {
+                "label": "OtherVal3",
+                "value": "OtherVal3",
+                "dependsArray": [
+                    "Odd",
+                    "All"
+                ]
+            },
+            {
+                "label": "OtherVal4",
+                "value": "OtherVal4",
+                "dependsArray": [
+                    "Even",
+                    "All"
+                ]
+            },
+            {
+                "label": "OtherVal5",
+                "value": "OtherVal5",
+                "dependsArray": [
+                    "Odd",
+                    "All"
+                ]
+            }
+        ]
+    }
+]

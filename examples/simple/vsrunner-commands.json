@@ -1,0 +1,12 @@
+[
+    {
+        "name": "build",
+        "cmd": "echo \"Opt1={Opt1} Opt2={Opt2} Opt3={Opt3}\"",
+        "type": "cmdBuild"
+    },
+    {
+        "name": "clean",
+        "cmd": "echo Clean executed",
+        "type": "cmdClean"
+    }
+]

@@ -1,0 +1,6 @@
+{
+    "vsrunner.enabled": true,
+    "vsrunner.historyFilePath": "vsrunner-history.log",
+    "vsrunner.optionsFilePath": "vsrunner-options.json",
+    "vsrunner.commandsFilePath": "vsrunner-commands.json"
+}

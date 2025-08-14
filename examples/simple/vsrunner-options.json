@@ -1,0 +1,59 @@
+[
+    {
+        "name": "Opt1",
+        "default": "Val1",
+        "type": "simple",
+        "items": [
+            {
+                "label": "Val1",
+                "value": "Val1"
+            },
+            {
+                "label": "Val2",
+                "value": "Val2"
+            },
+            {
+                "label": "Val3",
+                "value": "Val3"
+            }
+        ]
+    },
+    {
+        "name": "Opt2",
+        "default": "Item1",
+        "type": "simple",
+        "items": [
+            {
+                "label": "Item1",
+                "value": "Item1"
+            },
+            {
+                "label": "Item2",
+                "value": "Item2"
+            },
+            {
+                "label": "Item3",
+                "value": "Item3"
+            }
+        ]
+    },
+    {
+        "name": "Opt3",
+        "default": "Obj1",
+        "type": "simple",
+        "items": [
+            {
+                "label": "Obj1",
+                "value": "Obj1_Value"
+            },
+            {
+                "label": "Obj2",
+                "value": "Obj2_Value"
+            },
+            {
+                "label": "Obj3",
+                "value": "Obj3_Value"
+            }
+        ]
+    }
+]

@@ -1,0 +1,148 @@
+{
+  "name": "vsrunner",
+  "icon": "chip-icon.jpg",
+  "displayName": "VSCode run helper",
+  "description": "Menu for quick command run",
+  "version": "0.1.2",
+  "publisher": "electronshik",
+  "engines": {
+    "vscode": "^1.87.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/whoosh-bike/vsrunner.git"
+  },
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "runner-main.reveal",
+        "title": "Test View: Reveal"
+      },
+      {
+        "command": "runner-main.changeTitle",
+        "title": "Test View: Change Title"
+      },
+      {
+        "command": "runner-main.build",
+        "title": "Build Project",
+        "icon": {
+          "light": "/src/icons/light/build.png",
+          "dark": "build.png"
+        }
+      },
+      {
+        "command": "runner-main.clean",
+        "title": "Clean Project",
+        "icon": {
+          "light": "/src/icons/light/clear-all.png",
+          "dark": "clear-all.png"
+        }
+      },
+      {
+        "command": "runner-result.refresh",
+        "title": "Result Refresh"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vsrunner",
+          "title": "VS Runner",
+          "icon": "vscode.png"
+        }
+      ]
+    },
+    "views": {
+      "vsrunner": [
+        {
+          "id": "runner-main",
+          "name": "Run Options"
+        },
+        {
+          "id": "runner-result",
+          "name": "Run Result"
+        }
+      ]
+    },
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "runner-main.build"
+        },
+        {
+          "command": "runner-main.clean"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "runner-main.build",
+          "when": "view == runner-main",
+          "group": "navigation"
+        },
+        {
+          "command": "runner-main.clean",
+          "when": "view == runner-main",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "runner-main.build",
+          "group": "navigation"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "vsrunner",
+        "contents": "No node dependencies found [learn more](https://www.npmjs.com/).\n[Add Dependency](command:nodeDependencies.addEntry)"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "vsrunner",
+        "properties": {
+          "vsrunner.enabled": {
+            "type": "boolean",
+            "default": false
+          },
+          "vsrunner.optionsFilePath": {
+            "type": "string",
+            "default": "vsrunner-options.json"
+          },
+          "vsrunner.commandsFilePath": {
+            "type": "string",
+            "default": "vsrunner-commands.json"
+          },
+          "vsrunner.historyFilePath": {
+            "type": "string",
+            "default": "vsrunner-history.json"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/node": "18.x",
+    "@types/vscode": "^1.87.0",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "@vscode/test-cli": "^0.0.8",
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
+  }
+}
