@@ -1,0 +1,15 @@
+# To use run `pre-commit install`
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.28.0
+    hooks:
+      - id: gitleaks
+        name: gitleaks (protect staged)
+        entry: gitleaks protect
+        args: 
+          - "--staged"
+          - "--no-banner"
+          - "--verbose"
+          - "--redact"
+          - "--config=.gitleaks.toml"
