@@ -1,5 +1,12 @@
 # vsrunner README
 
+## Publish
+
+To publish new version from repository please refer to the official instruction.
+The publish to Marketplace after **vsce publish** command takes a few minutes.
+
+https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+
 ## Install
 
 To install VSCode extension locally (not recommended) you need to build **"vsrunner-X.X.X.vsix"** file and click "Install from VSIX" in VSCode Extensions menu. The commands to do so:
