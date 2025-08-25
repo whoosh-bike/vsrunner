@@ -121,7 +121,7 @@ export class RunnerMain {
 
 		let optionsFilePath = config.optionsFilePath;
 		if (rootPath != undefined) {
-			optionsFilePath = rootPath + '\\' + optionsFilePath;
+			optionsFilePath = rootPath + '/' + optionsFilePath;
 		}
 		if (!fs.existsSync(optionsFilePath)) {
 			throw new Error("Could not locate Options file!");
@@ -130,7 +130,7 @@ export class RunnerMain {
 
 		let commandsFilePath = config.commandsFilePath;
 		if (rootPath != undefined) {
-			commandsFilePath = rootPath + '\\' + commandsFilePath;
+			commandsFilePath = rootPath + '/' + commandsFilePath;
 		}
 		if (!fs.existsSync(commandsFilePath)) {
 			throw new Error("Could not locate Commands file!");
@@ -156,7 +156,7 @@ export class RunnerMain {
 
 		this.historyFilePath = config.historyFilePath;
 		if (rootPath != undefined) {
-			this.historyFilePath = rootPath + '\\' + this.historyFilePath;
+			this.historyFilePath = rootPath + '/' + this.historyFilePath;
 		}
 
 		let noHistoryFile = true;

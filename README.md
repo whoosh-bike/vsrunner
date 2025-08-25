@@ -19,9 +19,9 @@ Select **vsrunner** extension in left activity bar. The extension is disabled by
 
 ```json
     "vsrunner.enabled": true,
-    "vsrunner.optionsFilePath": "builds\\vsrunner\\vsrunner-options.json",
-    "vsrunner.optionsFilePath": "builds\\vsrunner\\vsrunner-commands.json",
-    "vsrunner.historyFilePath": "builds\\vsrunner\\vsrunner-history.json",
+    "vsrunner.optionsFilePath": "builds/vsrunner/vsrunner-options.json",
+    "vsrunner.optionsFilePath": "builds/vsrunner/vsrunner-commands.json",
+    "vsrunner.historyFilePath": "builds/vsrunner/vsrunner-history.json",
 ```
 
 There are two buttons to use the **vsrunner** - **build** and **clean** the project. If **build** configuration was changed and new **build** was executed without **clean** command, it would be detected by comparing to history file and **clean** command would be executed before **build**.

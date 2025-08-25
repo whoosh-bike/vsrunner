@@ -3,7 +3,7 @@
   "icon": "chip-icon.jpg",
   "displayName": "VSCode run helper",
   "description": "Menu for quick command run",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "electronshik",
   "engines": {
     "vscode": "^1.87.0"
