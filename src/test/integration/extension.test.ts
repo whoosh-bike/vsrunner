@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import type { Controller } from '../../controller';
 
 async function controller(): Promise<Controller> {
-	const ext = vscode.extensions.getExtension('whoosh-embedded.vsrunner')!;
+	const ext = vscode.extensions.getExtension('whoosh-embedded.we-project-runner-ui')!;
 	const { controller: ctl } = await ext.activate() as { controller: Controller };
 	for (let i = 0; i < 50 && !ctl.ready; i++) {
 		await new Promise(r => setTimeout(r, 100));

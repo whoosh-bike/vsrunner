@@ -1,6 +1,6 @@
 {
-  "name": "vsrunner",
-  "displayName": "VS Runner",
+  "name": "we-project-runner-ui",
+  "displayName": "Whoosh Embedded Project Runner UI",
   "description": "Pick a build configuration from a sidebar and run build, clean and custom commands with one click",
   "version": "0.2.0",
   "publisher": "whoosh-embedded",
