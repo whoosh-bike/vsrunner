@@ -51,15 +51,15 @@
 		{
 			"label": "Publish to Marketplace",
 			"type": "shell",
-			"command": "npx vsce publish",
-			"detail": "Needs a Personal Access Token: run 'npx vsce login whoosh-embedded' once",
+			"command": "npx vsce publish --azure-credential",
+			"detail": "Signs in through Azure CLI: run 'az login' as an owner of the whoosh-embedded publisher first",
 			"problemMatcher": []
 		},
 		{
 			"label": "Bump and publish",
 			"type": "shell",
-			"command": "npx vsce publish ${input:bump}",
-			"detail": "Bumps package.json, commits, tags and publishes",
+			"command": "npx vsce publish ${input:bump} --azure-credential && git push --follow-tags",
+			"detail": "Bumps package.json, commits, tags, publishes and pushes",
 			"problemMatcher": []
 		}
 	],
