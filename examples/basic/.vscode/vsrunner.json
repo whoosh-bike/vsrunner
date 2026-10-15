@@ -1,0 +1,39 @@
+{
+    "options": [
+        {
+            "id": "platform",
+            "label": "Platform",
+            "icon": "chip",
+            "default": "m4",
+            "items": [
+                { "label": "m3", "description": "Cortex-M3 board" },
+                { "label": "m4", "description": "Cortex-M4 board" }
+            ]
+        },
+        {
+            "id": "target",
+            "label": "Target",
+            "icon": "target",
+            "dependsOn": "platform",
+            "items": [
+                { "label": "app", "value": "type=app" },
+                { "label": "boot", "value": "type=boot" },
+                { "label": "preboot", "value": "type=preboot", "when": ["m4"] }
+            ]
+        },
+        { "id": "tag", "label": "Tag", "icon": "tag", "default": "dev", "items": ["prd", "dev"] },
+        { "id": "verbose", "label": "Verbose", "type": "toggle", "value": "V=1" },
+        { "id": "extra", "label": "Extra arguments", "type": "text", "placeholder": "key=value …" }
+    ],
+    "commands": [
+        {
+            "id": "build",
+            "label": "Build",
+            "cmd": "echo build platform={platform} {target} tag={tag} {verbose} {extra} && sleep 2",
+            "warning": { "message": "Building with tag {tag}", "when": { "tag": ["dev"] } }
+        },
+        { "id": "clean", "label": "Clean", "cmd": "echo clean && sleep 1" },
+        { "id": "fail", "label": "Failing command", "icon": "$(bug)", "cmd": "echo boom && exit 3" },
+        { "id": "flash", "label": "Flash", "icon": "flash", "confirm": "Flash {target.label} to {platform}?", "cmd": "echo flashing {platform}" }
+    ]
+}

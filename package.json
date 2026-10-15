@@ -1,51 +1,160 @@
 {
   "name": "vsrunner",
-  "icon": "chip-icon.jpg",
-  "displayName": "VSCode run helper",
-  "description": "Menu for quick command run",
-  "version": "0.1.4",
-  "publisher": "electronshik",
+  "displayName": "VS Runner",
+  "description": "Pick a build configuration from a sidebar and run build, clean and custom commands with one click",
+  "version": "0.2.0",
+  "publisher": "whoosh-embedded",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#4E5761",
+    "theme": "dark"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
   "engines": {
-    "vscode": "^1.87.0"
+    "vscode": "^1.140.0"
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "build",
+    "make",
+    "embedded",
+    "firmware",
+    "tasks"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/whoosh-bike/vsrunner.git"
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "workspaceContains:.vscode/vsrunner.json",
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Legacy preCmd/postCmd scripts from the config only run in a trusted workspace."
+    }
+  },
   "contributes": {
     "commands": [
       {
-        "command": "runner-main.reveal",
-        "title": "Test View: Reveal"
-      },
-      {
-        "command": "runner-main.changeTitle",
-        "title": "Test View: Change Title"
-      },
-      {
-        "command": "runner-main.build",
-        "title": "Build Project",
+        "command": "vsrunner.build",
+        "title": "Build",
+        "category": "VS Runner",
         "icon": {
-          "light": "/src/icons/light/build.png",
-          "dark": "build.png"
-        }
+          "light": "media/icons/light/build.svg",
+          "dark": "media/icons/dark/build.svg"
+        },
+        "enablement": "vsrunner.state == ready"
       },
       {
-        "command": "runner-main.clean",
-        "title": "Clean Project",
+        "command": "vsrunner.rebuild",
+        "title": "Rebuild (Clean + Build)",
+        "category": "VS Runner",
         "icon": {
-          "light": "/src/icons/light/clear-all.png",
-          "dark": "clear-all.png"
-        }
+          "light": "media/icons/light/rebuild.svg",
+          "dark": "media/icons/dark/rebuild.svg"
+        },
+        "enablement": "vsrunner.state == ready"
       },
       {
-        "command": "runner-result.refresh",
-        "title": "Result Refresh"
+        "command": "vsrunner.clean",
+        "title": "Clean",
+        "category": "VS Runner",
+        "icon": {
+          "light": "media/icons/light/clean.svg",
+          "dark": "media/icons/dark/clean.svg"
+        },
+        "enablement": "vsrunner.state == ready"
+      },
+      {
+        "command": "vsrunner.stop",
+        "title": "Stop Running Task",
+        "category": "VS Runner",
+        "icon": {
+          "light": "media/icons/light/stop.svg",
+          "dark": "media/icons/dark/stop.svg"
+        },
+        "enablement": "vsrunner.running"
+      },
+      {
+        "command": "vsrunner.runCommand",
+        "title": "Run Command…",
+        "category": "VS Runner",
+        "icon": {
+          "light": "media/icons/light/run.svg",
+          "dark": "media/icons/dark/run.svg"
+        },
+        "enablement": "vsrunner.state == ready"
+      },
+      {
+        "command": "vsrunner.pickConfiguration",
+        "title": "Select Configuration…",
+        "category": "VS Runner",
+        "icon": "$(settings)",
+        "enablement": "vsrunner.state == ready"
+      },
+      {
+        "command": "vsrunner.pickOption",
+        "title": "Change…",
+        "category": "VS Runner",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "vsrunner.selectItem",
+        "title": "Select",
+        "category": "VS Runner"
+      },
+      {
+        "command": "vsrunner.copyCommandLine",
+        "title": "Copy Command Line",
+        "category": "VS Runner",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "vsrunner.openConfig",
+        "title": "Open Config File",
+        "category": "VS Runner",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "vsrunner.createConfig",
+        "title": "Create Config File",
+        "category": "VS Runner"
+      },
+      {
+        "command": "vsrunner.migrateLegacyConfig",
+        "title": "Migrate Legacy Config to vsrunner.json",
+        "category": "VS Runner"
+      },
+      {
+        "command": "vsrunner.reload",
+        "title": "Reload Config",
+        "category": "VS Runner",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "vsrunner.showOutput",
+        "title": "Show Log",
+        "category": "VS Runner",
+        "icon": "$(output)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "vsrunner.build",
+        "key": "ctrl+alt+b",
+        "mac": "cmd+alt+b",
+        "when": "vsrunner.state == ready && !vsrunner.running"
+      },
+      {
+        "command": "vsrunner.pickConfiguration",
+        "key": "ctrl+alt+c",
+        "mac": "cmd+alt+c",
+        "when": "vsrunner.state == ready"
       }
     ],
     "viewsContainers": {
@@ -53,96 +162,260 @@
         {
           "id": "vsrunner",
           "title": "VS Runner",
-          "icon": "vscode.png"
+          "icon": "media/activitybar.svg"
         }
       ]
     },
     "views": {
       "vsrunner": [
         {
-          "id": "runner-main",
-          "name": "Run Options"
+          "id": "vsrunner.configuration",
+          "name": "Configuration",
+          "icon": "media/activitybar.svg"
         },
         {
-          "id": "runner-result",
-          "name": "Run Result"
-        }
-      ]
-    },
-    "menus": {
-      "commandPalette": [
-        {
-          "command": "runner-main.build"
-        },
-        {
-          "command": "runner-main.clean"
-        }
-      ],
-      "view/title": [
-        {
-          "command": "runner-main.build",
-          "when": "view == runner-main",
-          "group": "navigation"
-        },
-        {
-          "command": "runner-main.clean",
-          "when": "view == runner-main",
-          "group": "navigation"
-        }
-      ],
-      "editor/title": [
-        {
-          "command": "runner-main.build",
-          "group": "navigation"
+          "id": "vsrunner.actions",
+          "name": "Actions",
+          "icon": "media/activitybar.svg",
+          "when": "vsrunner.state == ready"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "vsrunner",
-        "contents": "No node dependencies found [learn more](https://www.npmjs.com/).\n[Add Dependency](command:nodeDependencies.addEntry)"
+        "view": "vsrunner.configuration",
+        "contents": "No VS Runner config found in this workspace.\n[Create .vscode/vsrunner.json](command:vsrunner.createConfig)\nThe config lists build options and the commands that use them. [Read more](https://github.com/whoosh-bike/vsrunner#configuration)",
+        "when": "vsrunner.state == missing"
+      },
+      {
+        "view": "vsrunner.configuration",
+        "contents": "The VS Runner config could not be loaded.\n[Open Config](command:vsrunner.openConfig)\n[Show Log](command:vsrunner.showOutput)",
+        "when": "vsrunner.state == error"
+      },
+      {
+        "view": "vsrunner.configuration",
+        "contents": "VS Runner is disabled for this workspace (vsrunner.enabled).\n[Open Settings](command:workbench.action.openWorkspaceSettings?%22vsrunner%22)",
+        "when": "vsrunner.state == disabled"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "vsrunner.build",
+          "when": "view == vsrunner.configuration && !vsrunner.running",
+          "group": "navigation@1"
+        },
+        {
+          "command": "vsrunner.stop",
+          "when": "view == vsrunner.configuration && vsrunner.running",
+          "group": "navigation@1"
+        },
+        {
+          "command": "vsrunner.rebuild",
+          "when": "view == vsrunner.configuration",
+          "group": "navigation@2"
+        },
+        {
+          "command": "vsrunner.clean",
+          "when": "view == vsrunner.configuration",
+          "group": "navigation@3"
+        },
+        {
+          "command": "vsrunner.openConfig",
+          "when": "view == vsrunner.configuration",
+          "group": "1_config@1"
+        },
+        {
+          "command": "vsrunner.reload",
+          "when": "view == vsrunner.configuration",
+          "group": "1_config@2"
+        },
+        {
+          "command": "vsrunner.showOutput",
+          "when": "view == vsrunner.configuration",
+          "group": "1_config@3"
+        },
+        {
+          "command": "vsrunner.copyCommandLine",
+          "when": "view == vsrunner.configuration",
+          "group": "2_build@1"
+        },
+        {
+          "command": "vsrunner.stop",
+          "when": "view == vsrunner.actions && vsrunner.running",
+          "group": "navigation@1"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "vsrunner.pickOption",
+          "when": "view == vsrunner.configuration && viewItem =~ /^option\\.(pick|text)$/",
+          "group": "inline"
+        },
+        {
+          "command": "vsrunner.runCommand",
+          "when": "view == vsrunner.actions && viewItem == command",
+          "group": "inline@1"
+        },
+        {
+          "command": "vsrunner.stop",
+          "when": "view == vsrunner.actions && viewItem == command.running",
+          "group": "inline@1"
+        },
+        {
+          "command": "vsrunner.copyCommandLine",
+          "when": "view == vsrunner.actions && viewItem =~ /^command/",
+          "group": "inline@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "vsrunner.pickOption",
+          "when": "false"
+        },
+        {
+          "command": "vsrunner.selectItem",
+          "when": "false"
+        },
+        {
+          "command": "vsrunner.copyCommandLine",
+          "when": "vsrunner.state == ready"
+        },
+        {
+          "command": "vsrunner.migrateLegacyConfig",
+          "when": "vsrunner.state == ready"
+        }
+      ]
+    },
+    "taskDefinitions": [
+      {
+        "type": "vsrunner",
+        "required": [
+          "command"
+        ],
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Id of a command from the VS Runner config; it runs with the current configuration."
+          }
+        }
+      }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": [
+          "vsrunner.json",
+          "vsrunner.template.json"
+        ],
+        "url": "./schemas/vsrunner.schema.json"
       }
     ],
     "configuration": [
       {
-        "title": "vsrunner",
+        "title": "VS Runner",
         "properties": {
           "vsrunner.enabled": {
             "type": "boolean",
-            "default": false
+            "default": true,
+            "description": "Enable VS Runner for this workspace."
+          },
+          "vsrunner.configFile": {
+            "type": "string",
+            "default": ".vscode/vsrunner.json",
+            "description": "Config file, relative to the workspace folder. Changes are picked up without a reload."
+          },
+          "vsrunner.cleanBeforeBuild": {
+            "type": "string",
+            "enum": [
+              "onChange",
+              "always",
+              "never"
+            ],
+            "enumDescriptions": [
+              "Clean when an option that affects the build changed since the last build",
+              "Clean before every build",
+              "Never clean automatically"
+            ],
+            "default": "onChange"
+          },
+          "vsrunner.saveBeforeRun": {
+            "type": "boolean",
+            "default": true,
+            "description": "Save all modified files before running a command."
+          },
+          "vsrunner.revealTerminal": {
+            "type": "string",
+            "enum": [
+              "always",
+              "silent",
+              "never"
+            ],
+            "enumDescriptions": [
+              "Always bring the terminal to front",
+              "Only show the terminal on problems",
+              "Never show the terminal"
+            ],
+            "default": "always"
+          },
+          "vsrunner.clearTerminal": {
+            "type": "boolean",
+            "default": true,
+            "description": "Clear the terminal before each run."
+          },
+          "vsrunner.notifyOnFinish": {
+            "type": "string",
+            "enum": [
+              "always",
+              "onFailure",
+              "never"
+            ],
+            "default": "onFailure",
+            "description": "Show a notification when a command finishes."
+          },
+          "vsrunner.showStatusBar": {
+            "type": "boolean",
+            "default": true,
+            "description": "Show the current configuration and a Build button in the status bar."
           },
           "vsrunner.optionsFilePath": {
             "type": "string",
-            "default": "vsrunner-options.json"
+            "markdownDeprecationMessage": "Legacy format, used only when `#vsrunner.configFile#` does not exist. Run **VS Runner: Migrate Legacy Config**."
           },
           "vsrunner.commandsFilePath": {
             "type": "string",
-            "default": "vsrunner-commands.json"
+            "markdownDeprecationMessage": "Legacy format, used only when `#vsrunner.configFile#` does not exist. Run **VS Runner: Migrate Legacy Config**."
           },
           "vsrunner.historyFilePath": {
             "type": "string",
-            "default": "vsrunner-history.json"
+            "deprecationMessage": "No longer used: the selection is kept in the workspace state."
           }
         }
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "yarn run compile",
+    "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "yarn run compile && yarn run lint",
-    "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "lint": "eslint src",
+    "icons": "node scripts/render-icon.mjs",
+    "test:unit": "npm run compile && mocha out/test/unit/**/*.test.js",
+    "test": "npm run compile && npm run lint && npm run test:unit && vscode-test",
+    "package": "vsce package",
+    "publish": "vsce publish"
   },
   "devDependencies": {
-    "@types/node": "18.x",
-    "@types/vscode": "^1.87.0",
-    "@typescript-eslint/eslint-plugin": "^7.4.0",
-    "@typescript-eslint/parser": "^7.4.0",
-    "@vscode/test-cli": "^0.0.8",
-    "@vscode/test-electron": "^2.3.9",
-    "eslint": "^8.57.0",
-    "typescript": "^5.3.3"
+    "@eslint/js": "^10.0.1",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^26.6.5",
+    "@types/vscode": "~1.140.0",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.0.0",
+    "eslint": "^10.12.0",
+    "mocha": "^12.0.3",
+    "typescript": "~6.0",
+    "typescript-eslint": "^8.71.2"
   }
 }

@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VS Runner config",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "options": {
+      "type": "array",
+      "description": "Build options shown in the Configuration view, in order. An option may only depend on one listed before it.",
+      "items": { "$ref": "#/definitions/option" }
+    },
+    "commands": {
+      "type": "array",
+      "description": "Commands shown in the Actions view. {optionId} expands to the selected value, {optionId.label} to its label, ${workspaceFolder} to the folder path.",
+      "items": { "$ref": "#/definitions/command" }
+    }
+  },
+  "required": ["options", "commands"],
+  "additionalProperties": false,
+  "definitions": {
+    "icon": {
+      "type": "string",
+      "description": "Bundled icon name or a codicon as $(name).",
+      "anyOf": [
+        {
+          "enum": ["build", "clean", "rebuild", "stop", "run", "flash", "analyze", "terminal", "publish",
+            "chip", "target", "tag", "board", "text", "toggle", "option"]
+        },
+        { "pattern": "^\\$\\([\\w~-]+\\)$" }
+      ]
+    },
+    "stringOrArray": {
+      "anyOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "item": {
+      "anyOf": [
+        { "type": "string", "description": "Label and value at once" },
+        {
+          "type": "object",
+          "properties": {
+            "label": { "type": "string", "description": "Shown in the UI and stored as the selection" },
+            "value": { "type": "string", "description": "What {optionId} expands to; defaults to the label" },
+            "description": { "type": "string" },
+            "when": { "$ref": "#/definitions/stringOrArray", "description": "Values of the dependsOn option this item is available for" }
+          },
+          "required": ["label"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "option": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[\\w-]+$" },
+        "label": { "type": "string" },
+        "type": {
+          "enum": ["pick", "text", "toggle"],
+          "default": "pick",
+          "markdownEnumDescriptions": ["One of `items`", "Free text, e.g. extra arguments", "On/off; `{id}` expands to `value` when on"]
+        },
+        "icon": { "$ref": "#/definitions/icon" },
+        "description": { "type": "string" },
+        "default": { "type": ["string", "boolean"] },
+        "dependsOn": { "type": "string", "description": "Id of a pick option that filters this option's items via their \"when\"" },
+        "items": { "type": "array", "items": { "$ref": "#/definitions/item" } },
+        "value": { "type": "string", "description": "toggle: the text {id} expands to when on" },
+        "placeholder": { "type": "string" },
+        "affectsBuild": { "type": "boolean", "description": "A change forces a clean before the next build. Default: true for pick options, false otherwise." },
+        "onChange": {
+          "description": "VS Code commands to run after the value changes. ${value} and {optionId} expand in string args.",
+          "anyOf": [
+            { "type": "string" },
+            { "$ref": "#/definitions/onChange" },
+            { "type": "array", "items": { "anyOf": [{ "type": "string" }, { "$ref": "#/definitions/onChange" }] } }
+          ]
+        }
+      },
+      "required": ["id"],
+      "additionalProperties": false
+    },
+    "onChange": {
+      "type": "object",
+      "properties": {
+        "command": { "type": "string" },
+        "args": { "type": "array" }
+      },
+      "required": ["command"],
+      "additionalProperties": false
+    },
+    "command": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[\\w-]+$" },
+        "label": { "type": "string" },
+        "cmd": { "type": "string", "description": "Shell command line" },
+        "kind": {
+          "enum": ["build", "clean", "other"],
+          "description": "build/clean drive the toolbar buttons and the clean-on-change logic. Defaults from the id."
+        },
+        "icon": { "$ref": "#/definitions/icon" },
+        "description": { "type": "string" },
+        "confirm": { "type": "string", "description": "Ask before running, e.g. for OTA updates" },
+        "warning": {
+          "type": "object",
+          "description": "Non-blocking warning shown when every listed option has one of the listed values",
+          "properties": {
+            "message": { "type": "string" },
+            "when": { "type": "object", "additionalProperties": { "$ref": "#/definitions/stringOrArray" } }
+          },
+          "required": ["message", "when"],
+          "additionalProperties": false
+        },
+        "problemMatcher": { "$ref": "#/definitions/stringOrArray", "description": "e.g. $gcc" }
+      },
+      "required": ["id", "cmd"],
+      "additionalProperties": false
+    }
+  }
+}

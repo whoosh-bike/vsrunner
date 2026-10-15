@@ -1,20 +1,75 @@
-// See https://go.microsoft.com/fwlink/?LinkId=733558
-// for the documentation about the tasks.json format
 {
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "Watch",
 			"type": "npm",
 			"script": "watch",
 			"problemMatcher": "$tsc-watch",
 			"isBackground": true,
-			"presentation": {
-				"reveal": "never"
-			},
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			}
+			"presentation": { "reveal": "never" },
+			"group": { "kind": "build", "isDefault": true }
+		},
+		{
+			"label": "Lint",
+			"type": "npm",
+			"script": "lint",
+			"problemMatcher": "$eslint-stylish"
+		},
+		{
+			"label": "Test",
+			"type": "npm",
+			"script": "test",
+			"problemMatcher": "$tsc",
+			"group": { "kind": "test", "isDefault": true }
+		},
+		{
+			"label": "Render icons",
+			"type": "npm",
+			"script": "icons",
+			"problemMatcher": []
+		},
+		{
+			"label": "Package VSIX",
+			"type": "shell",
+			"command": "npx vsce package --out vsrunner.vsix",
+			"problemMatcher": []
+		},
+		{
+			"label": "Install VSIX locally",
+			"type": "shell",
+			"command": "code --install-extension vsrunner.vsix --force",
+			"dependsOn": "Package VSIX",
+			"problemMatcher": []
+		},
+		{
+			"label": "Bump version",
+			"type": "shell",
+			"command": "npm version ${input:bump} --no-git-tag-version",
+			"problemMatcher": []
+		},
+		{
+			"label": "Publish to Marketplace",
+			"type": "shell",
+			"command": "npx vsce publish",
+			"detail": "Needs a Personal Access Token: run 'npx vsce login whoosh-embedded' once",
+			"problemMatcher": []
+		},
+		{
+			"label": "Bump and publish",
+			"type": "shell",
+			"command": "npx vsce publish ${input:bump}",
+			"detail": "Bumps package.json, commits, tags and publishes",
+			"problemMatcher": []
+		}
+	],
+	"inputs": [
+		{
+			"id": "bump",
+			"type": "pickString",
+			"description": "Version bump",
+			"options": ["patch", "minor", "major"],
+			"default": "patch"
 		}
 	]
 }
