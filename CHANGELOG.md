@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- `vsrunner.setupCommand`: for projects that generate their config, a missing
+  config offers **Generate config** instead of creating a sample.
+- Renamed to *Whoosh Embedded Project Runner UI* (`whoosh-embedded.we-project-runner-ui`).
+- README no longer describes internal projects.
+
 ## 0.2.0
 
 Rewrite.

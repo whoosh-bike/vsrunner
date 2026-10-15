@@ -2,7 +2,7 @@
   "name": "we-project-runner-ui",
   "displayName": "Whoosh Embedded Project Runner UI",
   "description": "Pick a build configuration from a sidebar and run build, clean and custom commands with one click",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "whoosh-embedded",
   "icon": "media/icon.png",
   "galleryBanner": {
@@ -126,6 +126,12 @@
         "category": "VS Runner"
       },
       {
+        "command": "vsrunner.runSetup",
+        "title": "Generate Config (setup command)",
+        "category": "VS Runner",
+        "enablement": "vsrunner.hasSetupCommand && !vsrunner.running"
+      },
+      {
         "command": "vsrunner.migrateLegacyConfig",
         "title": "Migrate Legacy Config to vsrunner.json",
         "category": "VS Runner"
@@ -185,7 +191,12 @@
       {
         "view": "vsrunner.configuration",
         "contents": "No VS Runner config found in this workspace.\n[Create .vscode/vsrunner.json](command:vsrunner.createConfig)\nThe config lists build options and the commands that use them. [Read more](https://github.com/whoosh-bike/vsrunner#configuration)",
-        "when": "vsrunner.state == missing"
+        "when": "vsrunner.state == missing && !vsrunner.hasSetupCommand"
+      },
+      {
+        "view": "vsrunner.configuration",
+        "contents": "This project generates its VS Runner config.\n[Generate config](command:vsrunner.runSetup)\nRuns the command from the vsrunner.setupCommand setting.",
+        "when": "vsrunner.state == missing && vsrunner.hasSetupCommand"
       },
       {
         "view": "vsrunner.configuration",
@@ -284,6 +295,10 @@
         {
           "command": "vsrunner.migrateLegacyConfig",
           "when": "vsrunner.state == ready"
+        },
+        {
+          "command": "vsrunner.runSetup",
+          "when": "vsrunner.hasSetupCommand"
         }
       ]
     },
@@ -323,6 +338,11 @@
             "type": "string",
             "default": ".vscode/vsrunner.json",
             "description": "Config file, relative to the workspace folder. Changes are picked up without a reload."
+          },
+          "vsrunner.setupCommand": {
+            "type": "string",
+            "default": "",
+            "markdownDescription": "Shell command that generates the config, for projects that do not commit it (e.g. `sh ./build/builder.sh project_init`). When set, a missing config offers **Generate config** instead of a sample."
           },
           "vsrunner.cleanBeforeBuild": {
             "type": "string",

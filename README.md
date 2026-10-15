@@ -1,8 +1,8 @@
-# VS Runner
+# Whoosh Embedded Project Runner UI
 
 A sidebar for picking a build configuration and running build, clean and custom
-commands with it. Built for the Whoosh firmware projects, configured per
-workspace with one JSON file.
+commands with it. Not tied to any project or toolchain: everything comes from
+one JSON file in the workspace.
 
 - **Configuration** view: every option with its current value; expand to pick,
   or use the pencil / `Cmd+Alt+C` for a quick pick. Options can depend on each
@@ -37,7 +37,7 @@ validates and completes it against the bundled JSON schema.
             "id": "target",
             "dependsOn": "platform",
             "items": [
-                { "label": "app", "value": "type=app adeq=9391df", "description": "NB_MAX" },
+                { "label": "app", "value": "type=app variant=full", "description": "full feature set" },
                 { "label": "preboot", "value": "type=preboot", "when": ["m4"] }
             ]
         },
@@ -88,6 +88,7 @@ validates and completes it against the bundled JSON schema.
 | --- | --- | --- |
 | `vsrunner.enabled` | `true` | |
 | `vsrunner.configFile` | `.vscode/vsrunner.json` | |
+| `vsrunner.setupCommand` | | Command that generates a missing config, see below |
 | `vsrunner.cleanBeforeBuild` | `onChange` | `onChange`, `always`, `never` |
 | `vsrunner.saveBeforeRun` | `true` | Save all files before running |
 | `vsrunner.revealTerminal` | `always` | `always`, `silent`, `never` |
@@ -104,53 +105,20 @@ Their `preCmd`/`postCmd` JavaScript only runs in a trusted workspace; use
 `onChange` and `warning` instead. `vsrunner.historyFilePath` is ignored: the
 selection lives in the workspace state.
 
-## wsh-iot
+## Generated configs
 
-`build/fw_builder.py` renders `.vscode/vsrunner.json` from
-`.vscode/vsrunner.template.json` and `build/builds.json` on every build, clean
-and `./build/builder.sh project_init`, so new targets show up in the sidebar
-without editing anything by hand. On a fresh clone run `project_init` once.
+A project can render `vsrunner.json` from its own build catalogue and keep it
+out of git, so new targets show up without editing the file by hand. Point
+`vsrunner.setupCommand` at the generator in the committed workspace settings:
+
+```jsonc
+// .vscode/settings.json
+"vsrunner.setupCommand": "sh ./tools/gen-vsrunner.sh"
+```
+
+On a fresh clone the sidebar then offers **Generate config** instead of a
+sample, and picks the result up as soon as it is written.
 
 ## Development
 
-```shell
-npm install
-npm run compile      # or the default build task (watch)
-npm test             # lint, unit tests, integration tests in VS Code
-npm run icons        # re-render media/ from scripts/render-icon.mjs
-```
-
-F5 launches an Extension Development Host with `examples/basic`,
-`examples/legacy` or `../wsh-iot`. The workspace tasks cover packaging,
-local install and publishing.
-
-## Publish
-
-Publisher: `whoosh-embedded`, owned by the Whoosh Entra ID tenant. Publishing
-signs in through Azure CLI, since global Personal Access Tokens stop working
-on December 1, 2026:
-
-```shell
-brew install azure-cli
-az login                 # an account with access to the publisher
-```
-
-Then run the **Bump and publish** task, or
-`npx vsce publish patch --azure-credential && git push --follow-tags`. The
-Marketplace takes a few minutes to show a new version.
-
-Until December 2026 a PAT (dev.azure.com → User settings → Personal access
-tokens, organization *All accessible organizations*, scope *Marketplace →
-Manage*) also works: `npx vsce login whoosh-embedded`, then `npx vsce publish`
-without `--azure-credential`.
-
-## Install from VSIX
-
-Run the **Install VSIX locally** task, or `npx vsce package` and
-*Extensions → … → Install from VSIX*.
-
-![Install from VSIX](install.png)
-
-## Icons
-
-See [docs/icons.md](docs/icons.md).
+See [docs/development.md](docs/development.md).

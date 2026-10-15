@@ -106,6 +106,7 @@ export class Controller implements vscode.Disposable {
 		}
 
 		void vscode.commands.executeCommand('setContext', 'vsrunner.state', this.state.kind);
+		void vscode.commands.executeCommand('setContext', 'vsrunner.hasSetupCommand', !!this.setupCommand());
 		this.changed.fire();
 	}
 
@@ -383,6 +384,41 @@ export class Controller implements vscode.Disposable {
 					void vscode.commands.executeCommand('workbench.action.terminal.focus');
 				}
 			});
+		}
+	}
+
+	// ── Setup ────────────────────────────────────────────────────────────────
+
+	/** Projects that generate their config (and git-ignore it) say here how. */
+	setupCommand(): { folder: vscode.WorkspaceFolder; cmd: string } | undefined {
+		for (const folder of vscode.workspace.workspaceFolders ?? []) {
+			const cmd = vscode.workspace.getConfiguration('vsrunner', folder).get<string>('setupCommand');
+			if (cmd) {
+				return { folder, cmd };
+			}
+		}
+		return undefined;
+	}
+
+	async runSetup(): Promise<void> {
+		const setup = this.setupCommand();
+		if (!setup) {
+			return;
+		}
+		const command: RunnerCommand = { id: 'setup', label: 'Generate config', cmd: setup.cmd, kind: 'other' };
+		this.output.info(`▶ ${command.label}: ${setup.cmd}`);
+		let result: RunResult;
+		try {
+			result = await this.runner.run(command, createTask(setup.folder, command, setup.cmd));
+		} catch (e) {
+			void vscode.window.showErrorMessage(`VS Runner: ${(e as Error).message}`);
+			return;
+		}
+		await this.reload();
+		if (result.exitCode !== 0) {
+			void vscode.window.showErrorMessage(`VS Runner: "${setup.cmd}" failed (exit ${result.exitCode})`);
+		} else if (this.state.kind === 'missing') {
+			void vscode.window.showWarningMessage(`VS Runner: "${setup.cmd}" finished but created no config`);
 		}
 	}
 

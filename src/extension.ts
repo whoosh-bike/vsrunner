@@ -77,6 +77,7 @@ export function activate(context: vscode.ExtensionContext): { controller: Contro
 	});
 	register('vsrunner.openConfig', () => openConfig(ctl));
 	register('vsrunner.createConfig', () => createConfig(ctl, SAMPLE_CONFIG));
+	register('vsrunner.runSetup', () => ctl.runSetup());
 	register('vsrunner.migrateLegacyConfig', () => {
 		const ready = ctl.ready;
 		if (!ready?.config.legacy) {
@@ -198,7 +199,7 @@ async function openConfig(ctl: Controller): Promise<void> {
 	} else if (state.kind === 'error') {
 		ctl.output.show();
 	} else {
-		await vscode.commands.executeCommand('vsrunner.createConfig');
+		await vscode.commands.executeCommand(ctl.setupCommand() ? 'vsrunner.runSetup' : 'vsrunner.createConfig');
 	}
 }
 
